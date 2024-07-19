@@ -7,4 +7,6 @@ import org.springframework.web.bind.annotation.*;
 public interface EncodeController {
 
     ShortenResponse encodeUrl(@RequestBody ShortenRequest encodeRequest);
+
+    ShortenResponse decodeUrl(@RequestBody ShortenRequest decodeRequest);
 }

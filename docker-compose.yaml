@@ -1,10 +1,11 @@
 version: '3'
 services:
   short-link:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    container_name: solventum-short-link
+    image: openjdk:17-jdk-alpine
     ports:
       - 8080:8080
     volumes:
-      - ./target:/app
+      - .:/app
+    working_dir: /app
+    command: ["./mvnw", "spring-boot:run"]
