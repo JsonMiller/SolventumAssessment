@@ -32,7 +32,7 @@ public class EncodeServiceTest {
     public void testEncodeSuccess() throws InvalidUrlException, OutOfMapSpaceException {
         String testUrl = "http://public-static.com/test";
         when(encodeDao.hasDecodedUrl(testUrl)).thenReturn(false);
-        when(encodeDao.hasEncodedUrl(Mockito.anyString())).thenReturn(false);
+        when(encodeDao.hasEncodedUrlId(Mockito.anyString())).thenReturn(false);
 
         String encodedUrl = encodeService.encodeUrl(testUrl);
 
@@ -44,7 +44,7 @@ public class EncodeServiceTest {
     public void testDuplicateEncodedUrl() throws InvalidUrlException, OutOfMapSpaceException {
         String testUrl = "http://public-static.com/test";
         when(encodeDao.hasDecodedUrl(testUrl)).thenReturn(false);
-        when(encodeDao.hasEncodedUrl(Mockito.anyString())).thenReturn(true).thenReturn(false);
+        when(encodeDao.hasEncodedUrlId(Mockito.anyString())).thenReturn(true).thenReturn(false);
 
         String encodedUrl = encodeService.encodeUrl(testUrl);
 
@@ -68,10 +68,11 @@ public class EncodeServiceTest {
 
     @Test
     public void testDecodeSuccess() throws InvalidUrlException {
-        String testUrl = "http://localhost:8080/test123";
+        String testUrlId = "test123";
+        String testUrl = "http://localhost:8080/" + testUrlId;
         String decodedUrl = "http://public-static.com/test";
 
-        when(encodeDao.hasEncodedUrl(testUrl)).thenReturn(true);
+        when(encodeDao.hasEncodedUrlId(testUrlId)).thenReturn(true);
         when(encodeDao.getDecodedUrl(testUrl)).thenReturn(decodedUrl);
 
         String resultUrl = encodeService.decodeUrl(testUrl);

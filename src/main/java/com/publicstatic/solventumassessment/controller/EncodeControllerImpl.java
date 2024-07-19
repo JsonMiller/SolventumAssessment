@@ -16,11 +16,6 @@ public class EncodeControllerImpl implements EncodeController {
     @Autowired
     private EncodeService encodeService;
 
-    @GetMapping()
-    public @ResponseBody String greeting() {
-        return "Hello, World";
-    }
-
     @Override
     @PostMapping("/encode")
     public ShortenResponse encodeUrl(@RequestBody ShortenRequest encodeRequest) {

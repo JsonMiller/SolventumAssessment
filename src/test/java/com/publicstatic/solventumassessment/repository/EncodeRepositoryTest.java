@@ -18,17 +18,17 @@ public class EncodeRepositoryTest {
     @Test
     public void testSaveAndRetrieveEncoded() throws OutOfMapSpaceException {
         String testUrl = "http://public-static.com/testing";
-        String testEncodedUrl = "http://localhost:8080/test123";
+        String testEncodedId = "test123";
         assertThat(encodeRepository.hasDecodedUrl(testUrl)).isEqualTo(false);
-        assertThat(encodeRepository.hasEncodedUrl(testEncodedUrl)).isEqualTo(false);
+        assertThat(encodeRepository.hasEncodedUrlId(testEncodedId)).isEqualTo(false);
 
-        encodeRepository.save(testUrl, testEncodedUrl);
+        encodeRepository.save(testEncodedId, testUrl);
 
         assertThat(encodeRepository.hasDecodedUrl(testUrl)).isEqualTo(true);
-        assertThat(encodeRepository.hasEncodedUrl(testEncodedUrl)).isEqualTo(true);
+        assertThat(encodeRepository.hasEncodedUrlId(testEncodedId)).isEqualTo(true);
 
-        assertThat(encodeRepository.getEncodedUrl(testUrl)).isEqualTo(testEncodedUrl);
-        assertThat(encodeRepository.getDecodedUrl(testEncodedUrl)).isEqualTo(testUrl);
+        assertThat(encodeRepository.getEncodedUrl(testUrl)).isEqualTo(testEncodedId);
+        assertThat(encodeRepository.getDecodedUrl(testEncodedId)).isEqualTo(testUrl);
     }
 
 }

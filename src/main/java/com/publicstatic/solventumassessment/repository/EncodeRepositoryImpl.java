@@ -18,8 +18,8 @@ public class EncodeRepositoryImpl implements EncodeRepository {
     private BidiMap<String, String> urlMap = new DualHashBidiMap<>();
 
     @Override
-    public boolean hasEncodedUrl(String encodedUrl) {
-        return urlMap.containsKey(encodedUrl);
+    public boolean hasEncodedUrlId(String encodedUrlId) {
+        return urlMap.containsKey(encodedUrlId);
     }
 
     @Override
@@ -33,16 +33,16 @@ public class EncodeRepositoryImpl implements EncodeRepository {
     }
 
     @Override
-    public String getDecodedUrl(String encodedUrl) {
-        return urlMap.get(encodedUrl);
+    public String getDecodedUrl(String encodedUrlId) {
+        return urlMap.get(encodedUrlId);
     }
 
     @Override
-    public void save(String decodedUrl, String encodedUrl) throws OutOfMapSpaceException {
+    public void save(String encodedUrlId, String decodedUrl) throws OutOfMapSpaceException {
         if(urlMap.size() == Integer.MAX_VALUE) {
             throw new OutOfMapSpaceException();
         }
-        urlMap.put(encodedUrl, decodedUrl);
+        urlMap.put(encodedUrlId, decodedUrl);
     }
 
     @Override

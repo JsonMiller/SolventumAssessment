@@ -1,5 +1,6 @@
 package com.publicstatic.solventumassessment.service;
 
+import com.publicstatic.solventumassessment.exceptions.InvalidIdException;
 import com.publicstatic.solventumassessment.exceptions.InvalidUrlException;
 import com.publicstatic.solventumassessment.exceptions.OutOfMapSpaceException;
 import com.publicstatic.solventumassessment.repository.EncodeRepository;
@@ -49,6 +50,7 @@ public class EncodeServiceImpl implements EncodeService {
     public String encodeUrl(String url) throws InvalidUrlException, OutOfMapSpaceException {
         boolean valueFound = false;
         String encodedUrl = "";
+        String encodedUrlId = "";
 
         if(!this.urlValidator.isValid(url)) {
             throw new InvalidUrlException();
@@ -59,11 +61,13 @@ public class EncodeServiceImpl implements EncodeService {
         }
 
         while(!valueFound) {
-            encodedUrl = generateEncodedUrl();
-            valueFound = !encodeDao.hasEncodedUrl(encodedUrl);
+            encodedUrlId = generateEncodedUrlId();
+            valueFound = !encodeDao.hasEncodedUrlId(encodedUrlId);
         }
 
-        encodeDao.save(url, encodedUrl);
+        encodedUrl = generateEncodedUrl(encodedUrlId);
+
+        encodeDao.save(encodedUrlId, url);
 
         return encodedUrl;
     }
@@ -74,11 +78,25 @@ public class EncodeServiceImpl implements EncodeService {
             throw new InvalidUrlException();
         }
 
-        return encodeDao.getDecodedUrl(url);
+        String encodedUrlId = getEncodedUrlId(url);
+
+        return encodeDao.getDecodedUrl(encodedUrlId);
     }
 
-    private String generateEncodedUrl() {
-        return protocol + "://" + hostname + ":" + port + "/" + randomStringGenerator.generate(7);
+    @Override
+    public String decodeId(String id) throws InvalidIdException {
+        if(!encodeDao.hasEncodedUrlId(id)) {
+            throw new InvalidIdException();
+        }
+        return encodeDao.getDecodedUrl(id);
+    }
+
+    private String generateEncodedUrlId() {
+        return randomStringGenerator.generate(7);
+    }
+
+    private String generateEncodedUrl(String id) {
+        return protocol + "://" + hostname + ":" + port + "/" + id;
     }
 
     private boolean isValidEncodedUrl(String encodedUrl) {
@@ -86,5 +104,9 @@ public class EncodeServiceImpl implements EncodeService {
             this.encodedUrlPattern = Pattern.compile("^" + this.protocol + "://" + this.hostname + ":" + this.port + "/([A-Za-z0-9]{7})$");
         }
         return this.encodedUrlPattern.matcher(encodedUrl).matches();
+    }
+
+    private String getEncodedUrlId(String encodedUrl) {
+        return encodedUrl.substring(encodedUrl.length() - 7);
     }
 }
